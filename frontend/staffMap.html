@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대학생 맛집 지도 - 관리자 모드</title>
+    <style>
+        /* 기본 레이아웃 및 디자인 */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Pretendard', sans-serif; display: flex; height: 100vh; overflow: hidden; }
+
+        /* 사이드바 */
+        .sidebar { width: 400px; height: 100%; background: white; border-right: 1px solid #ddd; display: flex; flex-direction: column; z-index: 10; }
+        .header { padding: 20px; border-bottom: 1px solid #eee; }
+        .search-bar { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 10px; }
+
+        /* 관리자 입력 폼 */
+        .admin-form { padding: 15px; background: #f9f9f9; border-bottom: 1px solid #eee; font-size: 13px; }
+        .admin-form input { width: 100%; padding: 8px; margin-bottom: 5px; border: 1px solid #ccc; border-radius: 5px; }
+        .admin-btn { width: 100%; padding: 10px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+        /* 맛집 리스트 영역 */
+        .container { flex: 1; overflow-y: auto; padding: 20px; }
+        .res-card { position: relative; border: 1px solid #eee; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .res-card h3 { margin-bottom: 5px; }
+        .delete-btn { position: absolute; top: 10px; right: 10px; background: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 11px; }
+
+        /* 지도 영역 */
+        .map-container { flex: 1; position: relative; background: #e5e3df; background-image: url('https://kakaomap.tistory.com/attachment/cfile25.uf@998B62445B16474F2000D0.png'); background-size: cover; background-position: center; }
+        .pin { position: absolute; width: 24px; height: 24px; background: #ff4d4d; border: 3px solid white; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); cursor: pointer; }
+        .pin-label { position: absolute; background: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; transform: translate(-20%, 25px); white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="header">
+            <h2>맛집 관리 시스템</h2>
+            <input type="text" class="search-bar" id="searchBar" placeholder="맛집 검색..." oninput="render()">
+        </div>
+
+        <div class="admin-form">
+            <strong>새 맛집 등록</strong>
+            <input type="text" id="newName" placeholder="식당 이름">
+            <input type="text" id="newCat" placeholder="카테고리 (예: 중식)">
+            <input type="text" id="newAddr" placeholder="주소">
+            <input type="number" id="newX" placeholder="가로 위치 (0~100 %)">
+            <input type="number" id="newY" placeholder="세로 위치 (0~100 %)">
+            <button class="admin-btn" onclick="addRestaurant()">등록하기</button>
+        </div>
+
+        <div class="container" id="resList">
+            
+            </div>
+    </aside>
+
+    <main class="map-container" id="map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d6330.806290010938!2d127.0265890317707!3d37.498408765712966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sko!2skr!4v1770879375738!5m2!1sko!2skr" 
+        width="1100" height="750" style="border:0;" allowfullscreen="" loading="lazy"
+         referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        </main>
+
+    <script>
+        // 초기 데이터 (데이터베이스 역할)
+        let restaurants = [
+            { id: 1, name: "냠냠버거", cat: "양식", addr: "강남로 123", x: 40, y: 30 },
+            { id: 2, name: "후루룩 마라탕", cat: "중식", addr: "역삼로 456", x: 60, y: 50 }
+        ];
+
+        // 1. 화면 그리기 함수 (Rendering)
+        function render() {
+            const listEl = document.getElementById('resList');
+            const mapEl = document.getElementById('map');
+            const searchKeyword = document.getElementById('searchBar').value.toLowerCase();
+
+            listEl.innerHTML = "";
+            mapEl.innerHTML = "";
+
+            // 검색어로 필터링된 데이터만 출력
+            const filtered = restaurants.filter(res => res.name.toLowerCase().includes(searchKeyword));
+
+            filtered.forEach(res => {
+                // 리스트 카드 생성
+                const card = document.createElement('div');
+                card.className = 'res-card';
+                card.innerHTML = /*html*/`
+                    <h3>${res.name}</h3>
+                    <p style="font-size:13px; color:#666;">${res.cat} | ${res.addr}</p>
+                    <button class="delete-btn" onclick="deleteRestaurant(${res.id})">삭제</button>
+                `;
+                listEl.appendChild(card);
+
+                // 지도 핀 생성
+                const pinWrap = document.createElement('div');
+                pinWrap.style.position = 'absolute';
+                pinWrap.style.left = res.x + "%";
+                pinWrap.style.top = res.y + "%";
+                pinWrap.innerHTML = /*html*/`
+                    <div class="pin" title="${res.name}"></div>
+                    <div class="pin-label">${res.name}</div>
+                `;
+                mapEl.appendChild(pinWrap);
+            });
+        }
+
+        // 2. 맛집 추가 함수
+        function addRestaurant() {
+            const name = document.getElementById('newName').value;
+            const cat = document.getElementById('newCat').value;
+            const addr = document.getElementById('newAddr').value;
+            const x = document.getElementById('newX').value;
+            const y = document.getElementById('newY').value;
+
+            if(!name || !x || !y) return alert("이름과 위치는 필수입니다!");
+
+            const newRes = {
+                id: Date.now(), // 고유 ID 생성
+                name, cat, addr, x, y
+            };
+
+            restaurants.push(newRes);
+            render(); // 화면 갱신
+            
+            // 입력창 비우기
+            document.querySelectorAll('.admin-form input').forEach(input => input.value = "");
+        }
+
+        // 3. 맛집 삭제 함수
+        function deleteRestaurant(id) {
+            if(confirm("정말 삭제하시겠습니까?")) {
+                restaurants = restaurants.filter(res => res.id !== id);
+                render(); // 화면 갱신
+            }
+        }
+
+        // 첫 실행
+        render();
+    </script>
+</body>
+</html>

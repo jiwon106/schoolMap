@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대학생 맛집 지도</title>
+    <link rel="stylesheet" href="css/style2.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="header">
+            <h2>학교 주변 맛집 Map</h2>
+            <input type="text" class="search-bar" placeholder="맛집을 검색해보세요">
+            <div class="filter-group">
+                <div class="filter-chip active">#혼밥맛집</div>
+                <div class="filter-chip">#가성비</div>
+                <div class="filter-chip">#5분거리</div>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="hero-image">
+            </div> 
+            <div class="content">
+                <span class="category">중식 전문점 / 마라탕</span>
+                <h1>후루룩 마라탕 강남점</h1>
+                <div class="rating">⭐⭐⭐⭐ 4.5</div>
+
+                <ul class="info-list">
+                    <li><b>주소</b> 서울시 강남구 테헤란로 1길</li>
+                    <li><b>전화번호</b> 010-1234-3421</li>
+                    <li><b>영업시간</b> 11:00 - 19:00</li>
+                </ul>
+                  <div class="review-section">
+                    <h4>리뷰 남기기</h4>
+                    <div class="review-input-group">
+                        <div class="rating-selection">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                            <span id="ratingValue">0</span>점
+                        </div>
+                        <textarea id="reviewText" placeholder="맛은 어떠셨나요? 솔직한 후기를 남겨주세요!"></textarea>
+                        <button class="review-submit-btn" onclick="addReview()">리뷰 등록</button>
+                    </div>
+
+                    <div class="review-display">
+                        <h5>최근 리뷰</h5>
+                        <ul id="reviewList" class="review-list">
+                            <li>- 너무 맛있습니다!</li>
+                            <li>- 학교 정문이랑 가까워서 좋아요.</li>
+                        </ul>
+                    </div>
+                </div>
+                <a href="#" class="btn" onclick="location.href='map.html'">닫기</a>
+                <a href="resver.html" class="btn" onclick="confirm('예약하시겠습니까?')">예약하기</a>
+            </div>
+        </div>
+    </aside>
+
+    <main class="map-container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d6330.806290010938!2d127.0265890317707!3d37.498408765712966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sko!2skr!4v1770879375738!5m2!1sko!2skr" 
+        width="1100" height="750" style="border:0;" allowfullscreen="" loading="lazy"
+         referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <div class="pin-wrapper pin-1">
+        <div class="pin" title="냠냠버거 강남점" onclick="location.href='burgerMap.html'"></div>
+        <div class="pin-label">냠냠버거</div>
+        </div>
+        <div class="pin-wrapper pin-2">
+        <div class="pin" title="후루룩 마라탕" onclick="location.href='maraMap.html'"></div>
+        <div class="pin-label">후루룩 마라탕</div>
+        </div>
+        <div class="pin-wrapper pin-3">
+        <div class="pin" title="고기천국 강남점" onclick="location.href='gogiMap.html'"></div>
+        <div class="pin-label">고기천국</div>
+        </div>
+    </main>
+<script>
+let selectedRating = 0; // 현재 선택된 점수를 저장할 변수
+
+// 별 클릭 이벤트 처리
+const stars = document.querySelectorAll('.star');
+stars.forEach(star => {
+    star.addEventListener('click', () => {
+        selectedRating = star.getAttribute('data-value');
+        updateStars(selectedRating);
+    });
+});
+
+// 별 UI 업데이트 함수
+function updateStars(rating) {
+    stars.forEach(star => {
+        if (star.getAttribute('data-value') <= rating) {
+            star.classList.add('active');
+        } else {
+            star.classList.remove('active');
+        }
+    });
+    document.getElementById('ratingValue').textContent = rating;
+}
+
+// 리뷰 등록 함수 수정
+function addReview() {
+    const reviewInput = document.getElementById('reviewText');
+    const reviewList = document.getElementById('reviewList');
+
+    if (selectedRating === 0) {
+        alert("별점을 선택해주세요!");
+        return;
+    }
+    if (reviewInput.value.trim() === "") {
+        alert("리뷰 내용을 입력해주세요!");
+        return;
+    }
+
+    // 별 모양 문자열 만들기 (예: 3점 -> ★★★☆☆)
+    const starDisplay = "★".repeat(selectedRating) + "☆".repeat(5 - selectedRating);
+
+    const newReview = document.createElement('li');
+    newReview.innerHTML = `<strong>${starDisplay}</strong><br> ${reviewInput.value}`;
+    
+    reviewList.insertBefore(newReview, reviewList.firstChild);
+
+    // 초기화
+    reviewInput.value = "";
+    selectedRating = 0;
+    updateStars(0);
+    alert("리뷰와 별점이 성공적으로 등록되었습니다!");
+}
+</script>
+</body>
+</html>

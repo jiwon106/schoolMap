@@ -1,0 +1,29 @@
+h2{
+    text-align:center;
+}
+#login_form{
+    margin:10px;
+    padding:20px;
+    text-align: center;
+}
+#username{
+    width:230px;
+    height:25px;
+    margin-bottom: 20px;
+}
+#password{
+    width:230px;
+    height:25px;
+}
+#login{
+    margin:20px;
+    width:250px;
+    height:30px;
+}
+a{
+    margin:10px;
+}
+img{
+    width:30px;
+    height:30px;
+}

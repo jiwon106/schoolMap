@@ -1,0 +1,215 @@
+/* CSS: 레이아웃 및 디자인 */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Pretendard', sans-serif;
+             display: flex; height: 100vh; overflow: hidden; }
+
+        /* 1. 왼쪽 사이드바 (리스트 영역) - 너비를 320px로 줄여 지도 크기 확대 */
+        .sidebar {
+            width: 350px; 
+            height: 100%;
+            background: white;
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        /* 검색 및 필터 헤더 */
+        .header { padding: 20px; border-bottom: 1px solid #eee; }
+        .search-bar {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .filter-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-chip {
+            padding: 6px 12px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .filter-chip.active { background: #333; color: white; }
+
+        /* 2. 카드 형태의 컨테이너 */
+        .container {
+            background-color: white;
+            margin: 15px;
+            border-radius: 10px;
+            overflow-y: auto; /* 내용이 많을 경우 내부 스크롤 */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+
+        /* 3. 상단 이미지 영역 - 높이를 200px로 조절하여 크기 축소 */
+        .hero-image{
+            width: 100%;
+            height: 200px; 
+            background-image: url("../images/gogi.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* 4. 정보 텍스트 영역 */
+        .content {
+            padding: 20px;
+        }
+
+        .category {
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        h1 {
+            margin: 8px 0;
+            font-size: 20px;
+        }
+
+        .rating {
+            color: #f1c40f;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .info-list li {
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .info-list b {
+            color: #333;
+            display: inline-block;
+            width: 70px;
+        }
+           /* 리뷰 섹션 스타일 */
+.review-section {
+    margin-top: 25px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.review-section h4 { font-size: 16px; margin-bottom: 10px; }
+/* 별점 스타일 */
+.rating-selection {
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #ddd; /* 기본 회색 */
+    cursor: pointer;
+    user-select: none;
+}
+
+.star.active {
+    color: #f1c40f; /* 선택된 노란색 */
+}
+
+.star:hover {
+    color: #f1c40f;
+}
+
+#ratingValue {
+    font-size: 18px;
+    margin-left: 10px;
+    color: #333;
+    font-weight: bold;
+}
+.review-input-group textarea {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: none; /* 크기 조절 비활성화 */
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.review-submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff6b6b; /* 눈에 띄는 빨간색 계열 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.review-submit-btn:hover { background-color: #ee5253; }
+
+.review-display { margin-top: 20px; }
+.review-display h5 { font-size: 14px; color: #777; margin-bottom: 10px; }
+
+.review-list { list-style: none; padding: 0; }
+.review-list li {
+    font-size: 14px;
+    color: #555;
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+}
+        .btn {
+            display: inline-block;
+            margin:30px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* 5. 오른쪽 지도 영역 - 사이드바가 줄어든 만큼 자동으로 확대됨 */
+        .map-container {
+            flex: 1;
+            position: relative;
+            background-image: url('https://kakaomap.tistory.com/attachment/cfile25.uf@998B62445B16474F2000D0.png');
+            background-size: cover;
+            background-position: center;
+        }
+          .pin-wrapper {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 핀과 글자를 가로 중앙 정렬 */
+            transform: translate(-50%, -100%); /* 핀 끝부분이 정확한 좌표에 오도록 조정 */
+        }   
+        .pin {
+            position: relative;
+            width: 24px;
+            height: 24px;
+            background: #ff4d4d;
+            border: 3px solid white;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+            .pin-label {
+            background: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 8px; /* 핀과의 간격 */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            white-space: nowrap; /* 글자가 줄바꿈되지 않게 설정 */
+        }
+        .pin-1 { top: 35%; left: 45%; }
+        .pin-2 { top: 55%; left: 65%; }
+        .pin-3 { top: 75%; left: 75%; }
+  

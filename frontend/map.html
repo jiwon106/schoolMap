@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대학생 맛집 지도</title>
+    <link rel="stylesheet" href="css/map.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="header">
+            <h2>학교 주변 맛집 Map</h2>
+            <div class="search">
+                <input type="text" class="search-bar" id="searchBar" placeholder="맛집 검색..." oninput="render()">
+            </div>
+            <div class="filter-group">
+                <div class="filter-chip active">#혼밥맛집</div>
+                <div class="filter-chip">#가성비</div>
+                <div class="filter-chip">#5분거리</div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="map-container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d6330.806290010938!2d127.0265890317707!3d37.498408765712966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sko!2skr!4v1770879375738!5m2!1sko!2skr" 
+        width="1100" height="750" style="border:0;" allowfullscreen="" loading="lazy"
+         referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <div class="pin-wrapper pin-1">
+            <div class="pin" title="냠냠버거 강남점" onclick="location.href='burgerMap.html'"></div>
+            <div class="pin-label">냠냠버거</div>
+        </div>
+        <div class="pin-wrapper pin-2">
+            <div class="pin" title="후루룩 마라탕" onclick="location.href='maraMap.html'"></div>
+            <div class="pin-label">후루룩 마라탕</div>
+        </div>
+        <div class="pin-wrapper pin-3">
+            <div class="pin" title="고기천국 강남점" onclick="location.href='gogiMap.html'"></div>
+            <div class="pin-label">고기천국</div>
+        </div>
+    </main>
+    <script>
+        // 초기 데이터 (데이터베이스 역할)
+        let restaurants = [
+            { id: 1, name: "냠냠버거", cat: "양식", addr: "강남로 123", x: 40, y: 30 },
+            { id: 2, name: "후루룩 마라탕", cat: "중식", addr: "역삼로 456", x: 60, y: 50 }
+        ];
+
+        // 1. 화면 그리기 함수 (Rendering)
+        function render() {
+             const listEl = document.getElementById('resList');
+            const mapEl = document.getElementById('map');
+            const searchKeyword = document.getElementById('searchBar').value.toLowerCase();
+             listEl.innerHTML = "";
+            mapEl.innerHTML = "";
+
+            // 검색어로 필터링된 데이터만 출력
+            const filtered = restaurants.filter(res => res.name.toLowerCase().includes(searchKeyword));
+               filtered.forEach(res => {
+                // 리스트 카드 생성
+                const card = document.createElement('div');
+                card.className = 'res-card';
+                card.innerHTML = /*html*/`
+                    <h3>${res.name}</h3>
+                    <p style="font-size:13px; color:#666;">${res.cat} | ${res.addr}</p>
+                    <button class="delete-btn" onclick="deleteRestaurant(${res.id})">삭제</button>
+                `;
+                listEl.appendChild(card);
+
+                // 지도 핀 생성
+                const pinWrap = document.createElement('div');
+                pinWrap.style.position = 'absolute';
+                pinWrap.style.left = res.x + "%";
+                pinWrap.style.top = res.y + "%";
+                pinWrap.innerHTML = /*html*/`
+                    <div class="pin" title="${res.name}"></div>
+                    <div class="pin-label">${res.name}</div>
+                `;
+                mapEl.appendChild(pinWrap);
+            });
+        }
+    </script>
+</body>
+</html>

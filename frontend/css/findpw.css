@@ -1,0 +1,21 @@
+form{
+    border:1px solid #222;
+    text-align: center;
+    margin:10px;
+    padding:20px;
+}
+#id{
+    width:150px;
+    height:20px;
+    margin-bottom:10px;
+}
+#name{
+    width:150px;
+    height:20px;
+    margin-bottom:10px;
+}
+#phone{
+    width:150px;
+    height:20px;
+    margin-bottom:10px;
+}
